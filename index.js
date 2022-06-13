@@ -9,11 +9,11 @@ const mongoclient = mongodb.MongoClient;
 
 const URL = 'mongodb+srv://raja16:raja16@cluster0.smsr1.mongodb.net/?retryWrites=true&w=majority'
 
-app.use(
-    cors({
-        origin: "https://rjcollection.netlify.app/"
-    })
-);
+// app.use(
+//     cors({
+//         origin: "https://rjcollection.netlify.app/"
+//     })
+// );
 
 app.use(express.static("" + "/public"));
 
