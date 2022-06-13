@@ -11,9 +11,11 @@ const URL = 'mongodb+srv://raja16:raja16@cluster0.smsr1.mongodb.net/?retryWrites
 
 app.use(
     cors({
-        origin: "http://localhost:3000"
+        origin: "https://rjcollection.netlify.app/"
     })
 );
+
+app.use(express.static("" + "/public"));
 
 app.use(express.json());
 
