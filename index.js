@@ -97,7 +97,55 @@ app.post('/contact', async (req, res) => {
 })
     
    
+app.post('/login', async (req, res) => {
+    try {
 
+        let connection = await mongoclient.connect(URL);
+
+        let db = connection.db('catalog');
+
+        let user = await db.collection('users').findOne({ email: req.body.email });
+        if (user) {
+
+            let compare = bcrypt.compareSync(req.body.password, user.password);
+            if (compare) {
+
+                let token = jwt.sign(
+                    { name: user.name, id: user._id },
+                    'thisisasecretkey',
+                    { expiresIn: '1h' }
+                );
+                res.json({ token });
+            } else {
+                res.status(500).json({ message: 'Credientials does not match' });
+            }
+        } else {
+            res.status(401).json({ message: 'Credientials does not match' });
+        }
+        await connection.close();
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
+
+
+app.post('/register', async (req, res) => {
+    try {
+        let connection = await mongoclient.connect(URL);
+        let db = connection.db('catalog');
+
+        let salt = bcrypt.genSaltSync(10);
+        var hash = bcrypt.hashSync(req.body.password, salt);
+        req.body.password = hash;
+
+        await db.collection('users').insertOne(req.body);
+        await connection.close();
+        res.json({ message: 'User Created' });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+});
 
 
 
